@@ -1,48 +1,47 @@
-def depth_limited_search(graph, start_node, goal_node, depth_limit):
-    # Visited set to keep track of explored nodes
-    visited = set()
-    path = []  # List to store the path taken
-
-    def recursive_search(node, depth):
-
-        if depth == depth_limit or node == goal_node:
-            path.append(node)
-            return node == goal_node
-
-        # Mark node as visited
-        visited.add(node)
-        path.append(node)  # Add current node to path
-
-        # Explore unvisited neighbors
-        for neighbor in graph[node]:
-            if neighbor not in visited:
-                # Perform recursive search on neighbor
-                if recursive_search(neighbor, depth + 1):
-                    return True
-
-        # Backtrack (remove current node from path if goal not found at this branch)
-        path.pop()
-        return False
-
-    # Start the search from the starting node
-    if recursive_search(start_node, 0):
-        print("Goal node found within depth limit. Path:", path)
-    else:
-        print("Goal node not found within depth limit")
-
-
-graph = {
-    'A': ['B', 'C'],
-    'B': ['D', 'E'],
-    'C': ['F'],
-    'D': [],
-    'E': ['F'],
-    'F': ['G'],
-    'G': ['H']
+graph={
+    'A':['B','C'],
+    'B':['D','E'],
+    'C':['F'],
+    'D':[],
+    'E':['F'],
+    'F':['G'],
+    'G':['H']
 }
+#adjacency list is stored in form of dictionary with node ===> list mapping
+#in dls dfs is performed upto a certain limit only
+startnode='A'
+goalnode='G'
+depthlimit=3
+#assumed that search will go only upto level number <=3
 
-start_node = 'A'
-goal_node = 'G'
-depth_limit = 3
+path=[]
+visited=set()
 
-depth_limited_search(graph, start_node, goal_node, depth_limit)
+def searchit(start,depth):
+    if (depth>depthlimit):
+        return False;
+    if (start==goalnode):
+        path.append(start)
+        return True;
+    visited.add(start)
+    path.append(start)
+    for neighbour in graph[start]:
+        if neighbour not in visited:
+            foundornot=searchit(neighbour,depth+1)
+            if (foundornot):
+                return True;
+    path.pop()
+    visited.pop()
+    return False;
+
+
+print("PRESENT OR NOT:- ",searchit(startnode,0))
+print(path)
+    
+            
+
+
+
+
+
+
