@@ -1,53 +1,59 @@
+#BEST FIRST SEARCH
 from queue import PriorityQueue
+H= {
+    'A': 11,
+    'B': 6,
+    'C': 5,
+    'D': 7,
+    'E': 3,
+    'F': 6,
+    'G': 5,
+    'H': 3,
+    'I': 1,
+     'J': 0
+}
+graph = {
+    'A': [('B', 6), ('F', 3)],
+    'B': [('A', 6), ('C', 3), ('D', 2)],
+    'C': [('B', 3), ('D', 1), ('E', 5)],
+    'D': [('B', 2), ('C', 1), ('E', 8)],
+    'E': [('C', 5), ('D', 8), ('I', 5), ('J', 5)],
+    'F': [('A', 3), ('G', 1), ('H', 7)],
+    'G': [('F', 1), ('I', 3)],
+    'H': [('F', 7), ('I', 2)],
+    'I': [('E', 5), ('G', 3), ('H', 2), ('J', 3)],
+    'J':[]
+}
+startnode='A'
+goalnode='J'
 
+visited=set()
+path=[]
+pq=PriorityQueue()
+visited.add(startnode)
+pq.put((H['A'],'A'))
+dist=0
+prevnode='A'
+while(pq.empty()==False):
+    heu,u=pq.get()
+    path.append(u)
+    prevnode=u
+    if (u==goalnode):
+        break
+    for neighbour in graph[u]:
+        if neighbour[0] not in visited:
+            visited.add(neighbour[0])
+            pq.put((H[neighbour[0]],neighbour[0]))
 
-def bestFirst(graph, src, target, n, hf):
-    visited = [False] * n
-    pq = PriorityQueue()
-    pq.put((0, src))
-    visited[src] = True
-    cost = 0
-    while pq.empty() == False:
-        dist, u = pq.get()
-        cost += dist
-        print(u, end=" ")
-        if u == target:
+for i in range(1,len(path)):
+    u=path[i-1]
+    v=path[i]
+    for first in graph[u]:
+        if (first[0]==v):
+            dist+=first[1]
             break
-        if (len(graph[u]) != 0):
-            for v, c in graph[u]:
-                if visited[v] == False:
-                    visited[v] = True
-                    pq.put((hf[v], v))
-    print()
-    return cost
+print("DISTANCE IS :- ",dist)
+print(path)
+    
 
 
-v = 10
-graph = [[] for i in range(v)]
-
-hf = {1: 12, 2: 4, 3: 7, 4: 3, 5: 8, 6: 2, 7: 4, 8: 9, 9: 0}
-
-
-def addedge(x, y, cost):
-    graph[x].append((y, cost))
-    graph[y].append((x, cost))
-
-
-addedge(0, 1, 3)
-addedge(0, 2, 2)
-addedge(1, 3, 4)
-addedge(1, 4, 1)
-addedge(2, 5, 3)
-addedge(2, 6, 1)
-addedge(5, 7, 5)
-addedge(6, 8, 2)
-addedge(6, 9, 3)
-
-source = 0
-target = 9
-print(bestFirst(graph, source, target, v, hf))
-# p = PriorityQueue()
-# p.put((5, 10))
-# p.put((10, 1))
-# p.put((1, 5))
-# print(p.get())
