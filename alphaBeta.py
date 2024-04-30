@@ -1,45 +1,26 @@
-
-MAX, MIN = 1000, -1000
-
-
-def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
-
-    if depth == 3:
-        return values[nodeIndex]
-
-    if maximizingPlayer:
-        best = MIN
-        # Recur for left and right children
-        for i in range(0, 2):
-
-            val = minimax(depth + 1, nodeIndex * 2 + i,
-                          False, values, alpha, beta)
-            best = max(best, val)
-            alpha = max(alpha, best)
-
-            # Alpha Beta Pruning
-            if beta <= alpha:
+#ALPHA BETA PRUNING
+list1=[-1,3,5,1,-6,-4,0,9]
+MIN=-10000
+MAX=+10000
+def minimax(depth,flag,nodeindex,alpha,beta):
+    if (depth==3):
+        return list1[nodeindex];
+    if (flag):
+        maxeval=MIN
+        for i in range(2):
+            eval=minimax(depth+1,False,nodeindex*2+i,alpha,beta)
+            maxeval=max(maxeval,eval)
+            alpha=max(alpha,eval)
+            if (alpha>=beta):
                 break
-
-        return best
-
+        return maxeval
     else:
-        best = MAX
-        # Recur for left and
-        # right children
-        for i in range(0, 2):
-
-            val = minimax(depth + 1, nodeIndex * 2 + i,
-                          True, values, alpha, beta)
-            best = min(best, val)
-            beta = min(beta, best)
-
-            # Alpha Beta Pruning
-            if beta <= alpha:
+        mineval=MAX
+        for i in range(2):
+            eval=minimax(depth+1,True,nodeindex*2+i,alpha,beta)
+            mineval=min(mineval,eval)
+            beta=min(beta,eval)
+            if (alpha>=beta):
                 break
-
-        return best
-
-
-values = [3, 5, 6, 9, 1, 2, 0, -1]
-print("The optimal value is :", minimax(0, 0, True, values, MIN, MAX))
+        return mineval
+print(minimax(0,True,0,MIN,MAX))
