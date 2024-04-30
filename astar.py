@@ -1,79 +1,18 @@
-def aStarAlgo(start_node, stop_node):
-    open_set = set(start_node)
-    closed_set = set()
-    g = {}
-    parents = {}
-    g[start_node] = 0
-    parents[start_node] = start_node
-    while len(open_set) > 0:
-        n = None
-        # node with lowest f() is found
-        for v in open_set:
-            if n == None or g[v] + heuristic(v) < g[n] + heuristic(n):
-                n = v
-        if n == stop_node or Graph_nodes[n] == None:
-            pass
-        else:
-            for (m, weight) in get_neighbors(n):
-                if m not in open_set and m not in closed_set:
-                    open_set.add(m)
-                    parents[m] = n
-                    g[m] = g[n] + weight
-                else:
-                    if g[m] > g[n] + weight:
-                        g[m] = g[n] + weight
-                        parents[m] = n
-                        if m in closed_set:
-                            closed_set.remove(m)
-                            open_set.add(m)
-        if n == None:
-            print('Path does not exist!')
-            return None
-
-        if n == stop_node:
-            path = []
-            while parents[n] != n:
-                path.append(n)
-                n = parents[n]
-            path.append(start_node)
-            path.reverse()
-            print('Path found: {}'.format(path))
-            return path
-        # remove n from the open_list, and add it to closed_list
-        # because all of his neighbors were inspected
-        open_set.remove(n)
-        closed_set.add(n)
-    print('Path does not exist!')
-    return None
-
-# define fuction to return neighbor and its distance
-# from the passed node
-
-
-def get_neighbors(v):
-    if v in Graph_nodes:
-        return Graph_nodes[v]
-    else:
-        return None
-
-
-def heuristic(n):
-    H_dist = {
-        'A': 11,
-        'B': 6,
-        'C': 5,
-        'D': 7,
-        'E': 3,
-        'F': 6,
-        'G': 5,
-        'H': 3,
-        'I': 1,
-        'J': 0
-    }
-    return H_dist[n]
-
-
-Graph_nodes = {
+#A star search
+from queue import PriorityQueue
+H= {
+    'A': 11,
+    'B': 6,
+    'C': 5,
+    'D': 7,
+    'E': 3,
+    'F': 6,
+    'G': 5,
+    'H': 3,
+    'I': 1,
+     'J': 0
+}
+graph = {
     'A': [('B', 6), ('F', 3)],
     'B': [('A', 6), ('C', 3), ('D', 2)],
     'C': [('B', 3), ('D', 1), ('E', 5)],
@@ -83,6 +22,30 @@ Graph_nodes = {
     'G': [('F', 1), ('I', 3)],
     'H': [('F', 7), ('I', 2)],
     'I': [('E', 5), ('G', 3), ('H', 2), ('J', 3)],
+    'J':[]
 }
+startnode='A'
+goalnode='J'
+pq=PriorityQueue()
+visited=set()
+pq.put((H[startnode]+0,startnode))
+path=[]
+ans=0
+while (pq.empty()==False):
+    f,node=pq.get()
+    visited.add(node)
+    path.append(node)
+    costuptoit=f-H[node]
+    ans=costuptoit
+    if (node==goalnode):
+        break
+    for neighbour in graph[node]:
+        if neighbour[0] not in visited:
+            pq.put((costuptoit+neighbour[1]+H[neighbour[0]],neighbour[0]))
+    
 
-aStarAlgo('A', 'J')
+print(path)
+print(ans)
+
+        
+            
